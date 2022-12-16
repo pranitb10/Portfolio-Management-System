@@ -1,0 +1,253 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > IModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: IModel (main.java.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IModel</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;import java.util.function.Predicate;
+&nbsp;
+&nbsp;import main.java.model.entities.StockPriceResponseWrapper;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface represents model part of the MVC architecture for the portfolio management system
+&nbsp; * application. It provides features like creating a portfolio, getting all portfolios, loading a
+&nbsp; * portfolio, viewing portfolio compositions.
+&nbsp; */
+&nbsp;public interface IModel {
+&nbsp;  String executeStrategy(int portfolioIndex,List&lt;String&gt; stockAndWeights, Double investmentAmount,
+&nbsp;          LocalDate startDate,LocalDate endDate,Double commission,int frequency) throws RuntimeException;
+&nbsp;  /**
+&nbsp;   * This method creates an inflexible portfolio for the user and persists it in the application.
+&nbsp;   *
+&nbsp;   * @param portfolioName The portfolioName that should be assigned to the portfolio.
+&nbsp;   * @param stocks A list Strings where each string contains the stockName/symbol, the
+&nbsp;   *         quantity associated with the stock and date at which it was purchased.
+&nbsp;   *
+&nbsp;   * @throws IOException 1.if an exception is occurred while storing the portfolio in the
+&nbsp;   *                     application. 2.If the arguments provided to the method are invalid.
+&nbsp;   */
+&nbsp;  void createInflexiblePortfolio(String portfolioName, List&lt;String&gt; stocks) throws RuntimeException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method creates a flexible portfolio for the user and persists it in the application.
+&nbsp;   *
+&nbsp;   * @param portfolioName The portfolioName that should be assigned to the portfolio.
+&nbsp;   *
+&nbsp;   * @return the index of the portfolio in the portfolioList, after its creation.
+&nbsp;   *
+&nbsp;   * @throws IllegalArgumentException if the portfolioName passed to the method is invalid.
+&nbsp;   */
+&nbsp;  int createFlexiblePortfolio(String portfolioName) throws IllegalArgumentException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Returns the value of the portfolio on a particular given date.
+&nbsp;   *
+&nbsp;   * @param portfolioIndex portfolioIndex for which the portfolio value needs to be
+&nbsp;   *         displayed for the given date
+&nbsp;   * @param date date for which the portfolio value needs to be displayed.
+&nbsp;   *
+&nbsp;   * @return StockPriceResponseWrapper object which internally has two list:- 1.List of Successful
+&nbsp;   *         stock records for which price was fetched successfully. 2.List of unsuccessful records
+&nbsp;   *         for which the price fetching failed.
+&nbsp;   *
+&nbsp;   * @throws IllegalArgumentException if the arguments passed to the method are invalid.
+&nbsp;   */
+&nbsp;
+&nbsp;  StockPriceResponseWrapper getPortfolioValueOnDate(int portfolioIndex, LocalDate date)
+&nbsp;          throws IllegalArgumentException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method provides all the portfolios that are currently persisted in the application.
+&nbsp;   *
+&nbsp;   * @return List of formatted strings, wherein each string represent a portfolio and its date of
+&nbsp;   *         creation.
+&nbsp;   */
+&nbsp;  List&lt;String&gt; getAllPortfolios();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A method to validate whether a given portfolio name is valid or not.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;It does two kinds of validations:- 1.The portfolio name should not be already present in
+&nbsp;   * the application. 2.The name cannot be an empty string. It only allows alpha Numeric
+&nbsp;   * characters(A-Z 0-9) and spaces in between the letters.
+&nbsp;   * &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return a predicate object which can be used to test user input by the controller whether a
+&nbsp;   *         given portfolio name is valid or invalid.
+&nbsp;   */
+&nbsp;  Predicate&lt;String&gt; isValidPortfolioName();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A method to validate whether a given String is a valid stockName or stockSymbol.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;The given string is validated against the supported list of stocks(masterList).
+&nbsp;   * The predicate returns true if it matches to any of the supported stocks name or the stock
+&nbsp;   * symbol. The predicate returns false if it does not matches neither stock name nor stock symbol
+&nbsp;   * for any of the supported stock &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return a predicate object which can be used to test user input by the controller ,whether a
+&nbsp;   *         given stock Name/Symbol is valid or invalid.
+&nbsp;   */
+&nbsp;  Predicate&lt;String&gt; validateStockNameSymbol();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A method to load a flexible portfolio from a user provided file.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;This method allows user to provide a file with a particular format on which the code
+&nbsp;   * will parse and get the portfolio name, stock Name, stock Quantity, transaction type and date on
+&nbsp;   * which transaction happened. In case the transaction is not consistent it notifies the user and
+&nbsp;   * doesn&#39;t consider the transaction.&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return The response(success/failure) after performing the load operation.
+&nbsp;   *
+&nbsp;   * @throws IllegalArgumentException if the arguments passed to the method are invalid.
+&nbsp;   */
+&nbsp;  String loadFlexiblePortfolioFromFile(String portfolioName) throws IllegalArgumentException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A method to load an inflexible portfolio from a user provided file.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;This method allows user to provide file with a particular format on which the code will
+&nbsp;   * parse and get the portfolio name, stock Name, stock Quantity, date on which transaction
+&nbsp;   * happened. In case the transaction is not consistent it notifies the user and doesn&#39;t consider
+&nbsp;   * the transaction &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return The response(success/failure) after performing the load operation.
+&nbsp;   */
+&nbsp;  String loadInFlexiblePortfolioFromFile(String portfolioName);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the composition of a given portfolio.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;A composition is basically how many stocks(quantity) of a particular company
+&nbsp;   * (ticker) are owned by a user. .&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param index index of the portfolio for which the composition needs to be displayed.
+&nbsp;   * @param date date at which the composition needs to be displayed.
+&nbsp;   *
+&nbsp;   * @return List of formatted strings, where each string represents a stock and its quantity
+&nbsp;   *         present in the portfolio.
+&nbsp;   *
+&nbsp;   * @throws IllegalArgumentException if the arguments passed to the method are invalid.
+&nbsp;   */
+&nbsp;  List&lt;String&gt; getPortfolioComposition(int index, LocalDate date) throws IllegalArgumentException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method is used to transact(buy/sell) a stock on a particular portfolio.
+&nbsp;   *
+&nbsp;   * @param portfolioIndex portfolio index on which the transaction needs to be updated.
+&nbsp;   * @param stockSymbol stockSymbol that needs to be transacted.
+&nbsp;   * @param stockQty Quantity of the stock that needs to be transacted.
+&nbsp;   * @param transactionType type of the transaction(buy/sell).
+&nbsp;   * @param transactionDate date of the transaction.
+&nbsp;   *
+&nbsp;   * @throws RuntimeException 1.If the transaction is invalid or if it cannot co-exist with the
+&nbsp;   *                          previously mentioned transactions for a particular stock.
+&nbsp;   */
+&nbsp;  void transactStock(int portfolioIndex, String stockSymbol, Double stockQty,
+&nbsp;                     String transactionType, LocalDate transactionDate) throws RuntimeException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows the user to configure a particular commission value in the application.
+&nbsp;   *
+&nbsp;   * @param commission value of the commission that needs to be configured in the system.
+&nbsp;   *
+&nbsp;   * @throws IllegalArgumentException if the commission passed is a negative invalid number.
+&nbsp;   */
+&nbsp;  void setCommission(Double commission) throws IllegalArgumentException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows us to return the cost basis on a portfolio until a date specified by the
+&nbsp;   * user.
+&nbsp;   * &lt;p&gt;
+&nbsp;   * For a given set of transactions, it would basically calculate the buy order until the day which
+&nbsp;   * user specifies. If there are no transactions the cost basis is zero. It will also consider all
+&nbsp;   * the commissions which where paid by the user for all the previous transactions.
+&nbsp;   * &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return the cost basis of the portfolio
+&nbsp;   *
+&nbsp;   * @throws RuntimeException 1.If some error occurred while fetching the price of stock on a
+&nbsp;   *                          particular date. 2.If the arguments passed to the method are invalid.
+&nbsp;   */
+&nbsp;  double getCostBasis(int portfolioIndex, LocalDate date) throws RuntimeException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A method allows us to get graph data that needs to displayed in the application.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;This method takes the portfolio number and two dates,and groups them by
+&nbsp;   * the a particular scale(weeks/months/years) between the two user given dates. It only displays
+&nbsp;   * between 5-30 lines and the maximum price would 50 asterisks and rest prices would be normalized
+&nbsp;   * according to the maximum price
+&nbsp;   * &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @return List of string to display the graph data.
+&nbsp;   */
+&nbsp;  List&lt;String&gt; fetchGraphData(int portfolioNumber, LocalDate startDate, LocalDate endDate);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

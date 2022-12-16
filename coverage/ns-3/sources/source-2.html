@@ -1,0 +1,276 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AbstractPriceProvider</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: AbstractPriceProvider (main.java.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AbstractPriceProvider</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26.7%
+  </span>
+  <span class="absValue">
+    (12/45)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AbstractPriceProvider$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28.3%
+  </span>
+  <span class="absValue">
+    (13/46)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import com.google.gson.reflect.TypeToken;
+&nbsp;
+&nbsp;import java.io.FileWriter;
+&nbsp;import java.io.Reader;
+&nbsp;import java.lang.reflect.Type;
+&nbsp;import java.nio.file.Files;
+&nbsp;import java.nio.file.Paths;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.TreeMap;
+&nbsp;
+&nbsp;import main.java.model.util.Util;
+&nbsp;
+&nbsp;/**
+&nbsp; * Abstract Price Provider that implements the PriceProvider interface.
+&nbsp; *
+&nbsp; * &lt;p&gt;It has an abstract method getPricesFromAPI which has to be compulsorily implemented by the
+&nbsp; * child classes extending it.&lt;/p&gt;
+&nbsp; * &lt;p&gt;This AbstractClass handles the caching logic, it holds the historical prices of the
+&nbsp; * stocks in a cache, it first checks the price in the cache if not than only calls the
+&nbsp; * getPricesFromAPI method from the child class. Once prices are retrieved it saves it to the
+&nbsp; * cache.&lt;/p&gt;
+&nbsp; */
+&nbsp;public abstract class AbstractPriceProvider implements PriceProvider {
+&nbsp;  private final static String CACHE_PATH = &quot;res/PRICE_CACHE.json&quot;;
+&nbsp;  protected Map&lt;String, TreeMap&lt;LocalDate, Double&gt;&gt; priceCache;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Initialize the priceProvider, by reading the cache from the PRICE_CACHE.json and loading it
+&nbsp;   * in the memory in a HashMap.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;
+&nbsp;   * Before hitting the API it checks the cache, and checks whether the hit is even necessary.
+&nbsp;   * &lt;/p&gt;
+&nbsp;   */
+<b class="fc">&nbsp;  protected AbstractPriceProvider() {</b>
+<b class="fc">&nbsp;    this.priceCache = readPriceCache();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A method that gives historical prices of the given stock.
+&nbsp;   *
+&nbsp;   * @param stockSymbol stock for which prices are required.
+&nbsp;   * @return Array of string having historical dateWise prices of the stock.
+&nbsp;   */
+&nbsp;  protected abstract String[] getPricesFromAPI(String stockSymbol);
+&nbsp;
+&nbsp;  private void saveCache() {
+&nbsp;    try {
+<b class="nc">&nbsp;      FileWriter writer = new FileWriter(CACHE_PATH);</b>
+<b class="nc">&nbsp;      Util.OUT_GSON.toJson(priceCache, writer);</b>
+<b class="nc">&nbsp;      writer.flush();</b>
+<b class="nc">&nbsp;      writer.close();</b>
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+&nbsp;      // do nothing if cache update fails
+<b class="nc">&nbsp;    }</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private Map&lt;String, TreeMap&lt;LocalDate, Double&gt;&gt; readPriceCache() {
+<b class="fc">&nbsp;    Map&lt;String, TreeMap&lt;LocalDate, Double&gt;&gt; outputMap = new HashMap&lt;&gt;();</b>
+&nbsp;    try {
+<b class="fc">&nbsp;      Reader reader = Files.newBufferedReader(Paths.get(&quot;res/PRICE_CACHE.json&quot;));</b>
+<b class="fc">&nbsp;      Type cacheMapType = new TypeToken&lt;Map&lt;String, TreeMap&lt;LocalDate, Double&gt;&gt;&gt;() {</b>
+<b class="fc">&nbsp;      }.getType();</b>
+<b class="fc">&nbsp;      outputMap = Util.IN_GSON.fromJson(reader, cacheMapType);</b>
+<b class="fc">&nbsp;      reader.close();</b>
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+&nbsp;      // in case of error return empty cache
+<b class="nc">&nbsp;      return outputMap;</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;    return outputMap;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the price of the stock on the given date. It first checks in the cache if
+&nbsp;   * price is not found than calls the child class method getPricesFromAPI to get the prices.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;
+&nbsp;   * For a given stock it queries the date until the program is executed and the price will
+&nbsp;   * be cached so that for subsequent dates the cache is called without utilizing the API hit.
+&nbsp;   * It internally has 3 retries to ensure teh call does not fail bcz of some transient failure
+&nbsp;   * from the API side.
+&nbsp;   * &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param stockSymbol The stock symbol which the price needs to fetched
+&nbsp;   * @param date        the date on which price needs to fetched
+&nbsp;   * @return The price of the stock on a given date
+&nbsp;   * @throws RuntimeException 1. If the price is not found for the date
+&nbsp;   *                          2. If price is unable to be fetched due to some API failure from
+&nbsp;   *                          the child class.
+&nbsp;   */
+&nbsp;  public Double getPriceOfStock(String stockSymbol, LocalDate date) throws RuntimeException {
+&nbsp;    //check in the cache
+&nbsp;    // floor is used to get the price of last available date(to handle scenarios like public
+&nbsp;    // holidays)
+<b class="fc">&nbsp;    if (priceCache.containsKey(stockSymbol) &amp;&amp; priceCache.get(stockSymbol).ceilingKey(date) != null) {</b>
+<b class="fc">&nbsp;      return priceCache.get(stockSymbol).ceilingEntry(date).getValue();</b>
+&nbsp;    } else {
+&nbsp;      // call specific class api implementations methods....with 2 retries if api fails
+<b class="nc">&nbsp;      for (int i = 0; i &lt; 3; i++) {</b>
+&nbsp;        try {
+<b class="nc">&nbsp;          Double priceOfStock = null;</b>
+<b class="nc">&nbsp;          String[] prices = getPricesFromAPI(stockSymbol);</b>
+&nbsp;          // add stock key to the cacheMap...if it doesn&#39;t exist
+<b class="nc">&nbsp;          if (!priceCache.containsKey(stockSymbol)) {</b>
+<b class="nc">&nbsp;            priceCache.put(stockSymbol, new TreeMap&lt;&gt;());</b>
+&nbsp;          }
+&nbsp;
+&nbsp;          // update price cache...also assign to variable priceOfStock if date matches
+<b class="nc">&nbsp;          for (int j = 1; j &lt; prices.length; j++) {</b>
+<b class="nc">&nbsp;            LocalDate dateFromAPI = Util.getDateFromString(prices[j].split(&quot;,&quot;)[0]);</b>
+<b class="nc">&nbsp;            Double priceFromAPI = Double.valueOf(prices[j].split(&quot;,&quot;)[4]);</b>
+<b class="nc">&nbsp;            if (dateFromAPI.equals(date)) {</b>
+<b class="nc">&nbsp;              priceOfStock = priceFromAPI;</b>
+&nbsp;            }
+&nbsp;            // break from whichever date price already exists in the cache
+<b class="nc">&nbsp;            if (priceCache.get(stockSymbol).containsKey(dateFromAPI)) {</b>
+<b class="nc">&nbsp;              break;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            priceCache.get(stockSymbol).put(dateFromAPI, priceFromAPI);</b>
+&nbsp;          }
+&nbsp;          try {
+<b class="nc">&nbsp;            saveCache();</b>
+<b class="nc">&nbsp;          } catch (Exception e) {</b>
+&nbsp;            //do nothing if unable to save cache
+<b class="nc">&nbsp;          }</b>
+&nbsp;
+<b class="nc">&nbsp;          if (priceOfStock == null) {</b>
+<b class="nc">&nbsp;            Double checkFloorPrice = priceCache.get(stockSymbol).ceilingEntry(date).getValue();</b>
+<b class="nc">&nbsp;            if (checkFloorPrice == null) {</b>
+<b class="nc">&nbsp;              throw new RuntimeException(&quot;Price not found for the date&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            priceOfStock = checkFloorPrice;</b>
+&nbsp;          }
+<b class="nc">&nbsp;          return priceOfStock;</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;          continue;</b>
+&nbsp;        }
+&nbsp;      }
+&nbsp;    }
+<b class="nc">&nbsp;    throw new RuntimeException(&quot;Unable to fetch Price for the given stock and date&quot;);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

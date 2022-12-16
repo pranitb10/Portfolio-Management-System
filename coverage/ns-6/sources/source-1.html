@@ -1,0 +1,349 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TextView</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.view</a>
+</div>
+
+<h1>Coverage Summary for Class: TextView (main.java.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TextView</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70%
+  </span>
+  <span class="absValue">
+    (7/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    49.1%
+  </span>
+  <span class="absValue">
+    (52/106)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.view;
+&nbsp;
+&nbsp;import java.io.PrintStream;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;import main.java.model.entities.StockPriceResponseWrapper;
+&nbsp;import main.java.model.util.Util;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class represents implementation of the IView interface. The implementation focuses on
+&nbsp; * how to
+&nbsp; * display the inputs processed by Model and passed by Controller to the user.
+&nbsp; */
+&nbsp;public class TextView implements IView {
+&nbsp;  private PrintStream out;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Constructs a TextView object which can be used by the controller to give the outputs to
+&nbsp;   * display.
+&nbsp;   *
+&nbsp;   * @param out Printstream object which would used to give an output stream to store and
+&nbsp;   *            display output of the project.
+&nbsp;   */
+<b class="fc">&nbsp;  public TextView(PrintStream out) {</b>
+<b class="fc">&nbsp;    this.out = out;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the string received from the controller to the user in text format.
+&nbsp;   *
+&nbsp;   * @param text text string that needs to be displayed in the view.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public void displayText(String text) {
+<b class="fc">&nbsp;    if (text == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;Text cannot be null&quot;);</b>
+&nbsp;    }
+<b class="fc">&nbsp;    out.println(text);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void displayMessageInFormat(String format, String[] message) {
+<b class="fc">&nbsp;    if (message == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;Message cannot be null&quot;);</b>
+&nbsp;    }
+<b class="fc">&nbsp;    if (format == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;Format cannot be null&quot;);</b>
+&nbsp;    }
+<b class="fc">&nbsp;    out.printf(format, message);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void displayTable(String[][] table) {
+&nbsp;
+<b class="fc">&nbsp;    boolean leftJustifiedRows = false;</b>
+<b class="fc">&nbsp;    Map&lt;Integer, Integer&gt; columnLengths = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    Arrays.stream(table)</b>
+<b class="fc">&nbsp;            .forEach(a -&gt; Stream.iterate(0, (i -&gt; i &lt; a.length), (i -&gt; ++i)).forEach(i -&gt; {</b>
+<b class="fc">&nbsp;              if (columnLengths.get(i) == null) {</b>
+<b class="fc">&nbsp;                columnLengths.put(i, 0);</b>
+&nbsp;              }
+<b class="fc">&nbsp;              if (columnLengths.get(i) &lt; a[i].length()) {</b>
+<b class="fc">&nbsp;                columnLengths.put(i, a[i].length());</b>
+&nbsp;              }
+&nbsp;            }));
+&nbsp;
+<b class="fc">&nbsp;    final StringBuilder formatString = new StringBuilder(&quot;&quot;);</b>
+<b class="fc">&nbsp;    String flag = leftJustifiedRows ? &quot;-&quot; : &quot;&quot;;</b>
+<b class="fc">&nbsp;    columnLengths.entrySet().stream()</b>
+<b class="fc">&nbsp;            .forEach(e -&gt; formatString.append(&quot;| %&quot; + flag + e.getValue() + &quot;s &quot;));</b>
+<b class="fc">&nbsp;    formatString.append(&quot;|\n&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;    Stream.iterate(0, (i -&gt; i &lt; table.length), (i -&gt; ++i))</b>
+<b class="fc">&nbsp;            .forEach(a -&gt; this.displayMessageInFormat(formatString.toString(), table[a]));</b>
+<b class="fc">&nbsp;    out.println();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the portfolio table in a formatted output to the user in text format.
+&nbsp;   *
+&nbsp;   * @param listOfPortfolio List of strings, wherein each string contains a portfolioName
+&nbsp;   *                        and the date of creation.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public void createPortfolioTable(List&lt;String&gt; listOfPortfolio) {
+<b class="fc">&nbsp;    if (listOfPortfolio == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;List of portfolio cannot be null&quot;);</b>
+&nbsp;    }
+<b class="fc">&nbsp;    int portfolioSize = listOfPortfolio.size();</b>
+<b class="fc">&nbsp;    if (portfolioSize == 0) {</b>
+<b class="nc">&nbsp;      displayText(&quot;There is no list of portfolios.&quot;);</b>
+&nbsp;      return;
+&nbsp;    }
+<b class="fc">&nbsp;    String[][] table = new String[portfolioSize + 1][4];</b>
+<b class="fc">&nbsp;    table[0][0] = &quot;id&quot;;</b>
+<b class="fc">&nbsp;    table[0][1] = &quot;Portfolio Name&quot;;</b>
+<b class="fc">&nbsp;    table[0][2] = &quot;Number of Stocks&quot;;</b>
+<b class="fc">&nbsp;    table[0][3] = &quot;Date of Creation&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;    for (int index = 0; index &lt; listOfPortfolio.size(); index++) {</b>
+<b class="fc">&nbsp;      String[] listOfSplittedstrings = listOfPortfolio.get(index).split(&quot;\\|&quot;);</b>
+<b class="fc">&nbsp;      table[index + 1][0] = String.valueOf(index + 1);</b>
+<b class="fc">&nbsp;      table[index + 1][1] = listOfSplittedstrings[0];</b>
+<b class="fc">&nbsp;      table[index + 1][2] = listOfSplittedstrings[2];</b>
+<b class="fc">&nbsp;      table[index + 1][3] = listOfSplittedstrings[1];</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    displayTable(table);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the portfolio composition to the user in a text formatted output.
+&nbsp;   *
+&nbsp;   * @param listOfStocks list of strings, where each string represent the stock information
+&nbsp;   *                     like symbol, Quantity, name etc.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public void getPortfolioComposition(List&lt;String&gt; listOfStocks) {
+<b class="fc">&nbsp;    if (listOfStocks == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;List of Purchased of stocks cannot be null&quot;);</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    if (listOfStocks.size() == 0) {</b>
+<b class="nc">&nbsp;      displayText(&quot;No stocks to display in this Portfolio&quot;);</b>
+&nbsp;      return;
+&nbsp;    }
+<b class="fc">&nbsp;    String[][] table = new String[listOfStocks.size() + 1][4];</b>
+&nbsp;
+<b class="fc">&nbsp;    table[0][0] = &quot;id&quot;;</b>
+<b class="fc">&nbsp;    table[0][1] = &quot;Stock Code&quot;;</b>
+<b class="fc">&nbsp;    table[0][2] = &quot;Name of Company&quot;;</b>
+<b class="fc">&nbsp;    table[0][3] = &quot;Number of Shares Brought&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;    for (int index = 0; index &lt; listOfStocks.size(); index++) {</b>
+<b class="fc">&nbsp;      String[] listOfSplittedstrings = listOfStocks.get(index).split(&quot;\\|&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;      table[index + 1][0] = String.valueOf(index + 1);</b>
+<b class="fc">&nbsp;      table[index + 1][1] = listOfSplittedstrings[1];</b>
+<b class="fc">&nbsp;      table[index + 1][2] = listOfSplittedstrings[0];</b>
+<b class="fc">&nbsp;      table[index + 1][3] = listOfSplittedstrings[2];</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    displayTable(table);</b>
+&nbsp;
+&nbsp;  }
+&nbsp;
+&nbsp;  private void getPortfolioCompositionWithPrice(List&lt;String&gt; listOfStocks) {
+&nbsp;
+<b class="nc">&nbsp;    String[][] table = new String[listOfStocks.size() + 1][6];</b>
+&nbsp;
+<b class="nc">&nbsp;    table[0][0] = &quot;id&quot;;</b>
+<b class="nc">&nbsp;    table[0][1] = &quot;Stock Code&quot;;</b>
+<b class="nc">&nbsp;    table[0][2] = &quot;Name of Company&quot;;</b>
+<b class="nc">&nbsp;    table[0][3] = &quot;Number of Shares Brought&quot;;</b>
+<b class="nc">&nbsp;    table[0][4] = &quot;Price&quot;;</b>
+<b class="nc">&nbsp;    table[0][5] = &quot;Value&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;    for (int index = 0; index &lt; listOfStocks.size(); index++) {</b>
+<b class="nc">&nbsp;      String[] listOfSplittedstrings = listOfStocks.get(index).split(&quot;\\|&quot;);</b>
+<b class="nc">&nbsp;      table[index + 1][0] = String.valueOf(index + 1);</b>
+<b class="nc">&nbsp;      table[index + 1][1] = listOfSplittedstrings[1];</b>
+<b class="nc">&nbsp;      table[index + 1][2] = listOfSplittedstrings[0];</b>
+<b class="nc">&nbsp;      table[index + 1][3] = listOfSplittedstrings[2];</b>
+<b class="nc">&nbsp;      table[index + 1][4] = listOfSplittedstrings[3];</b>
+<b class="nc">&nbsp;      table[index + 1][5] = String.format(&quot;%.2f&quot;, Double.parseDouble(listOfSplittedstrings[4]));</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    displayTable(table);</b>
+&nbsp;
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the portfolio value in a text formatted output.
+&nbsp;   *
+&nbsp;   * @param response  StockPriceResponseWrapper object which internally has successList
+&nbsp;   *                  consisting of portfolio stocks and its value at a currentDate...along with
+&nbsp;   *                  it failure
+&nbsp;   *                  stocks for which price retrieval failed
+&nbsp;   * @param inputDate Date for which the portfolio is being displayed.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public void showStockResponseWrapper(StockPriceResponseWrapper response, LocalDate inputDate) {
+<b class="nc">&nbsp;    List&lt;String&gt; successList = response.getSuccessList();</b>
+<b class="nc">&nbsp;    List&lt;String&gt; failureList = response.getFailureList();</b>
+<b class="nc">&nbsp;    Double totalPrice = response.getPortfolioValue();</b>
+<b class="nc">&nbsp;    if (successList == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;Success List in response wrapper cannot be null&quot;);</b>
+&nbsp;    }
+<b class="nc">&nbsp;    if (failureList == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;Failure List in response wrapper cannot be null&quot;);</b>
+&nbsp;    }
+<b class="nc">&nbsp;    if (inputDate == null) {</b>
+<b class="nc">&nbsp;      throw new IllegalArgumentException(&quot;Input Date cannot be null&quot;);</b>
+&nbsp;    }
+<b class="nc">&nbsp;    if (successList.size() == 0 &amp;&amp; failureList.size() == 0) {</b>
+<b class="nc">&nbsp;      displayText(&quot;No response found by the application.&quot;);</b>
+&nbsp;      return;
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    if (successList.size() &gt; 0) {</b>
+<b class="nc">&nbsp;      displayText(&quot;We were able to successfully get values of these stocks&quot;);</b>
+<b class="nc">&nbsp;      getPortfolioCompositionWithPrice(successList);</b>
+<b class="nc">&nbsp;      displayText(String.format(&quot;The total value of the portfolio on %s: $%.2f&quot;, inputDate,</b>
+&nbsp;              totalPrice));
+&nbsp;    }
+<b class="nc">&nbsp;    if (failureList.size() &gt; 0) {</b>
+<b class="nc">&nbsp;      displayText(&quot;&quot;);</b>
+<b class="nc">&nbsp;      displayText(&quot;Alas ! We fail to fetch the prices for these stocks&quot;);</b>
+<b class="nc">&nbsp;      getPortfolioComposition(failureList);</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the graph output.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;
+&nbsp;   * It receives three inputs: 1. Scale of the time 2. The normalized price 3. The actual price
+&nbsp;   * that
+&nbsp;   * needs to be displayed
+&nbsp;   * &lt;/p&gt;
+&nbsp;   * .
+&nbsp;   */
+&nbsp;  public void displayGraph(List&lt;String&gt; graphOutput) {
+<b class="nc">&nbsp;    float max_price = 0;</b>
+<b class="nc">&nbsp;    List&lt;Float&gt; floats = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    for (int index = 0; index &lt; graphOutput.size(); index++) {</b>
+<b class="nc">&nbsp;      String[] splittedString = graphOutput.get(index).split(&quot;\\&quot; + Util.FILE_OUTPUT_SEPARATOR);</b>
+<b class="nc">&nbsp;      out.print(String.format(&quot;%s:&quot;, splittedString[0]));</b>
+<b class="nc">&nbsp;      floats.add(Float.parseFloat(splittedString[1]));</b>
+<b class="nc">&nbsp;      for (int k = 0; k &lt; Integer.parseInt(splittedString[2]); k++) {</b>
+<b class="nc">&nbsp;        out.print(&quot;*&quot;);</b>
+&nbsp;      }
+<b class="nc">&nbsp;      displayText(String.format(&quot; [$ &quot; + splittedString[1] + &quot;]&quot;));</b>
+&nbsp;    }
+<b class="nc">&nbsp;    Float max = floats.stream().max(Float::compare).get();</b>
+<b class="nc">&nbsp;    float scale = max / 50;</b>
+<b class="nc">&nbsp;    displayText(String.format(&quot;Scale: * = %f&quot;, scale));</b>
+&nbsp;  }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

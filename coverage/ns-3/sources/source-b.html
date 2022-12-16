@@ -1,0 +1,87 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PriceProvider</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: PriceProvider (main.java.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">PriceProvider</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface is responsible for providing prices for the stocks on given dates to the Model.
+&nbsp; */
+&nbsp;public interface PriceProvider {
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns the price of a particular stock on a given date.
+&nbsp;   *
+&nbsp;   * @param stockSymbol The stock symbol which the price needs to fetched
+&nbsp;   * @param date        the date on which price needs to fetched
+&nbsp;   * @return The price of the stock on a given date
+&nbsp;   * @throws RuntimeException 1. If the price is not found for the date
+&nbsp;   */
+&nbsp;  Double getPriceOfStock(String stockSymbol, LocalDate date) throws RuntimeException;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

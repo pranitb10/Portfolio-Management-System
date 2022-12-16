@@ -1,0 +1,598 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TextController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: TextController (main.java.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TextController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    68.8%
+  </span>
+  <span class="absValue">
+    (11/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    52.1%
+  </span>
+  <span class="absValue">
+    (100/192)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.controller;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.format.DateTimeParseException;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Scanner;
+&nbsp;import java.util.function.Function;
+&nbsp;import java.util.function.Predicate;
+&nbsp;
+&nbsp;import main.java.model.IModel;
+&nbsp;import main.java.model.entities.StockPriceResponseWrapper;
+&nbsp;import main.java.model.util.Util;
+&nbsp;import main.java.view.IView;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class represents the text based implementation of the IController Interface. All the methods
+&nbsp; * in the class are implemented considering text based user inputs and outputs.
+&nbsp; */
+&nbsp;public class TextController implements IController {
+&nbsp;
+&nbsp;  private final IModel iModel;
+&nbsp;
+<b class="fc">&nbsp;  private final Function&lt;String, Integer&gt; intParsingFn = (s -&gt; Integer.parseInt(s));</b>
+<b class="fc">&nbsp;  private final Function&lt;String, Double&gt; doubleParsingFn = (s -&gt; Double.parseDouble(s));</b>
+&nbsp;  private final IView iView;
+&nbsp;  private final Scanner in;
+<b class="fc">&nbsp;  private final String MAIN_MENU_ITEMS = &quot;==================================\n&quot; + &quot;What would you&quot;</b>
+&nbsp;          + &quot; like to do today?\n&quot; + &quot;1.Create a InFlexible PortFolio\n&quot; + &quot;2.Create a Flexible &quot;
+&nbsp;          + &quot;PortFolio\n3.Get Portfolio composition\n4.Get value of Portfolio on a &quot;
+&nbsp;          + &quot;given Date\n5.Load Flexible Portfolio\n6.Load InFlexible Portfolio\n&quot;
+&nbsp;          + &quot;7.Buy/Sell a stock in an portfolio\n8.Get cost basis of a Portfolio\n&quot;
+&nbsp;          + &quot;9.Update Commission of the system\n10.Show Graphical Representation of Portfolio\n&quot;
+&nbsp;          + &quot;11.Quit&quot;;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This constructs the TextController Object and behaves according the model and view passed to
+&nbsp;   * the method.
+&nbsp;   *
+&nbsp;   * @param iModel Object of the model that the controller will interact with for the
+&nbsp;   *         processing.
+&nbsp;   * @param iView Object of the View that the controller will interact with for displaying
+&nbsp;   *         the output.
+&nbsp;   * @param in InputStream from which the user input should be taken inside the controller.
+&nbsp;   */
+<b class="fc">&nbsp;  public TextController(IModel iModel, IView iView, InputStream in) {</b>
+<b class="fc">&nbsp;    this.iModel = iModel;</b>
+<b class="fc">&nbsp;    this.iView = iView;</b>
+<b class="fc">&nbsp;    this.in = new Scanner(in);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A generic method which takes string input from user until the given validation(predicate) is
+&nbsp;   * passed.
+&nbsp;   *
+&nbsp;   * @param predicate predicate that needs to be run on the string input received from the
+&nbsp;   *         user.
+&nbsp;   * @param outputDisplay display String that needs to be displayed before taking the user
+&nbsp;   *         input.
+&nbsp;   * @param errorString error string that needs to be displayed if the input string fails
+&nbsp;   *         the validation
+&nbsp;   *
+&nbsp;   * @return String which was received as an input from user and passed the validation.
+&nbsp;   */
+&nbsp;  private String takeStringInput(Predicate&lt;String&gt; predicate, String outputDisplay,
+&nbsp;                                 String errorString) {
+<b class="fc">&nbsp;    iView.displayText(outputDisplay);</b>
+<b class="fc">&nbsp;    String inputString = in.nextLine();</b>
+&nbsp;    // take input until validation is passed
+<b class="fc">&nbsp;    while (predicate.test(inputString)) {</b>
+<b class="fc">&nbsp;      iView.displayText(errorString);</b>
+<b class="fc">&nbsp;      inputString = in.nextLine();</b>
+&nbsp;    }
+<b class="fc">&nbsp;    return inputString;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A generic method which takes file path as input from user until the path entered is valid.
+&nbsp;   *
+&nbsp;   * @param displayString display String that needs to be displayed before taking the user
+&nbsp;   *         input.
+&nbsp;   * @param errorString error string that needs to be displayed if the input string fails
+&nbsp;   *         the validation
+&nbsp;   *
+&nbsp;   * @return final validated file path
+&nbsp;   */
+&nbsp;  private String takeCSVFilePathInput(String displayString, String errorString) {
+&nbsp;
+<b class="nc">&nbsp;    String inputString = &quot;&quot;;</b>
+<b class="nc">&nbsp;    iView.displayText(displayString);</b>
+<b class="nc">&nbsp;    boolean isError = false;</b>
+<b class="nc">&nbsp;    int index = 0;</b>
+&nbsp;    // take input until validation is passed
+&nbsp;    do {
+<b class="nc">&nbsp;      if (isError) {</b>
+<b class="nc">&nbsp;        iView.displayText(errorString);</b>
+&nbsp;      }
+&nbsp;
+<b class="nc">&nbsp;      inputString = in.nextLine();</b>
+<b class="nc">&nbsp;      isError = !inputString.endsWith(&quot;.csv&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;      if (isError) {</b>
+<b class="nc">&nbsp;        isError = true;</b>
+<b class="nc">&nbsp;        errorString = &quot;File doesn&#39;t have csv extension, please reenter the path&quot;;</b>
+<b class="nc">&nbsp;        continue;</b>
+&nbsp;      }
+<b class="nc">&nbsp;      File csvFile = new File(inputString);</b>
+<b class="nc">&nbsp;      if (!csvFile.exists() || csvFile.isDirectory()) {</b>
+<b class="nc">&nbsp;        isError = true;</b>
+<b class="nc">&nbsp;        errorString = &quot;File doesn&#39;t exist, please reenter the path&quot;;</b>
+&nbsp;      }
+&nbsp;    }
+<b class="nc">&nbsp;    while (isError);</b>
+&nbsp;
+<b class="nc">&nbsp;    return inputString;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A generic method which takes number input from user until the given validation(predicate) is
+&nbsp;   * passed.
+&nbsp;   *
+&nbsp;   * @param outputDisplay display String that needs to be displayed before taking the user
+&nbsp;   *         input.
+&nbsp;   * @param errorString error string that needs to be displayed if the input string fails
+&nbsp;   *         the validation
+&nbsp;   *
+&nbsp;   * @return number which was received as an input from user and passed the validation.
+&nbsp;   */
+&nbsp;  private &lt;R&gt; R takeNumericInput(Predicate&lt;R&gt; predicate, Function&lt;String, R&gt; parsingFunction,
+&nbsp;                                 String outputDisplay, String errorString) {
+<b class="fc">&nbsp;    iView.displayText(outputDisplay);</b>
+<b class="fc">&nbsp;    boolean isError = false;</b>
+<b class="fc">&nbsp;    R number = null;</b>
+&nbsp;    // take input until validation is passed
+&nbsp;    do {
+<b class="fc">&nbsp;      if (isError) {</b>
+<b class="fc">&nbsp;        iView.displayText(errorString);</b>
+&nbsp;      }
+&nbsp;      try {
+<b class="fc">&nbsp;        String inputString = in.nextLine();</b>
+&nbsp;
+<b class="fc">&nbsp;        number = parsingFunction.apply(inputString);</b>
+&nbsp;        // test the input string on the predicate
+<b class="fc">&nbsp;        isError = predicate.test(number);</b>
+<b class="fc">&nbsp;      } catch (NumberFormatException e) {</b>
+&nbsp;        // if unable to parse again ask for input
+<b class="fc">&nbsp;        isError = true;</b>
+<b class="fc">&nbsp;        continue;</b>
+<b class="fc">&nbsp;      }</b>
+&nbsp;
+&nbsp;    }
+<b class="fc">&nbsp;    while (isError);</b>
+<b class="fc">&nbsp;    return number;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * A generic method which takes Date input from user until the given validation(predicate) is
+&nbsp;   * passed.
+&nbsp;   *
+&nbsp;   * @param outputDisplay display String that needs to be displayed before taking the user
+&nbsp;   *         input.
+&nbsp;   * @param errorString error string that needs to be displayed if the input string fails
+&nbsp;   *         the validation
+&nbsp;   *
+&nbsp;   * @return Date which was received as an input from user and passed the validation.
+&nbsp;   */
+&nbsp;  private LocalDate takeDateInput(Predicate&lt;LocalDate&gt; predicate, String outputDisplay,
+&nbsp;                                  String errorString) {
+&nbsp;    String inputString;
+<b class="fc">&nbsp;    LocalDate inputDate = null;</b>
+<b class="fc">&nbsp;    iView.displayText(outputDisplay);</b>
+<b class="fc">&nbsp;    boolean isError = false;</b>
+&nbsp;    // take input until validation is passed
+&nbsp;    do {
+<b class="fc">&nbsp;      if (isError) {</b>
+<b class="fc">&nbsp;        iView.displayText(errorString);</b>
+&nbsp;      }
+&nbsp;      try {
+<b class="fc">&nbsp;        inputString = in.nextLine();</b>
+<b class="fc">&nbsp;        inputDate = Util.getDateFromString(inputString);</b>
+&nbsp;        // test given date on the predicate
+<b class="fc">&nbsp;        isError = predicate.test(inputDate);</b>
+<b class="fc">&nbsp;      } catch (DateTimeParseException ex) {</b>
+<b class="fc">&nbsp;        isError = true;</b>
+&nbsp;        // if parsing exception again ask for input
+<b class="fc">&nbsp;        continue;</b>
+<b class="fc">&nbsp;      }</b>
+&nbsp;
+&nbsp;    }
+<b class="fc">&nbsp;    while (isError);</b>
+<b class="fc">&nbsp;    return inputDate;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows user to select from the portfolio List and return the portfolio number.
+&nbsp;   *
+&nbsp;   * @param inputMessage display String that needs to be displayed before taking the user
+&nbsp;   *         input.
+&nbsp;   *
+&nbsp;   * @return The portfolio index from the list of portfolios.
+&nbsp;   */
+&nbsp;  private int showPortfoliosAndTakeUserInput(String inputMessage) throws RuntimeException {
+<b class="fc">&nbsp;    List&lt;String&gt; persistedPortfolio = iModel.getAllPortfolios();</b>
+<b class="fc">&nbsp;    if (persistedPortfolio.size() == 0) {</b>
+<b class="fc">&nbsp;      throw new RuntimeException(&quot;No portfolios exists in the system, please create one&quot;);</b>
+&nbsp;    }
+<b class="fc">&nbsp;    iView.createPortfolioTable(persistedPortfolio);</b>
+&nbsp;    // get the index of the portfolio to be displayed from the user
+<b class="fc">&nbsp;    return takeNumericInput((s -&gt; s &lt; 1 || s &gt; persistedPortfolio.size()), intParsingFn,</b>
+&nbsp;                            inputMessage, &quot;Invalid number, please enter a valid portfolio number.&quot;);
+&nbsp;  }
+&nbsp;
+&nbsp;  private void transactStock(int portfolioNumber) {
+&nbsp;    // take stock name/symbol
+<b class="fc">&nbsp;    String stockName = takeStringInput(iModel.validateStockNameSymbol(),</b>
+&nbsp;                                       &quot;Enter the name or symbol of the stock :&quot;,
+&nbsp;                                       &quot;No such stock name or stock Symbol found please enter a &quot;
+&nbsp;                                               + &quot;valid input&quot;);
+&nbsp;
+<b class="fc">&nbsp;    String transactionType = takeStringInput((s -&gt; !(s.equalsIgnoreCase(&quot;b&quot;)</b>
+<b class="nc">&nbsp;                                                     || s.equalsIgnoreCase(&quot;s&quot;))),</b>
+&nbsp;                                             &quot;Do want to buy or sell the stock? Enter b for buy &quot;
+&nbsp;                                                     + &quot;or s for sell.&quot;,
+&nbsp;                                             &quot;Invalid input please enter valid transaction type&quot;);
+<b class="fc">&nbsp;    Integer stockQty = takeNumericInput((s -&gt; s &lt;= 0), intParsingFn,</b>
+&nbsp;                                        &quot;Enter the quantity of stocks you wish to transact?&quot;,
+&nbsp;                                        &quot;Invalid number, please enter a valid positive number.&quot;);
+<b class="fc">&nbsp;    LocalDate transactionDate = takeDateInput((d -&gt; d.isAfter(LocalDate.now())),</b>
+&nbsp;                                              &quot;Enter the date of the transaction(yyyy-mm-dd):&quot;,
+&nbsp;                                              &quot;Please enter a valid date format.&quot;);
+&nbsp;    try {
+<b class="fc">&nbsp;      iModel.transactStock(portfolioNumber, stockName, stockQty.doubleValue(), transactionType,</b>
+&nbsp;                           transactionDate);
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void createFlexiblePortfolio() {
+&nbsp;
+<b class="fc">&nbsp;    String portfolioName = takeStringInput(iModel.isValidPortfolioName(),</b>
+&nbsp;                                           &quot;Enter the name of the Portfolio:&quot;,
+&nbsp;                                           &quot;Portfolio name is invalid or already exists please &quot;
+&nbsp;                                                   + &quot;enter a new name:&quot;);
+<b class="fc">&nbsp;    int portfolioNumber = 0;</b>
+&nbsp;    try {
+<b class="fc">&nbsp;      portfolioNumber = iModel.createFlexiblePortfolio(portfolioName);</b>
+<b class="nc">&nbsp;    } catch (IllegalArgumentException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="fc">&nbsp;    }</b>
+&nbsp;    // Number Of Stocks input
+<b class="fc">&nbsp;    int numberOfStocks = takeNumericInput((s -&gt; s &lt;= 0), intParsingFn,</b>
+&nbsp;                                          &quot;How many stocks do you want to add to the portfolio?&quot;,
+&nbsp;                                          &quot;Please enter valid positive number&quot;);
+&nbsp;
+<b class="fc">&nbsp;    for (int i = 1; i &lt;= numberOfStocks; i++) {</b>
+<b class="fc">&nbsp;      transactStock(portfolioNumber);</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  private void createInflexiblePortfolio() {
+&nbsp;
+<b class="fc">&nbsp;    String portfolioName = takeStringInput(iModel.isValidPortfolioName(),</b>
+&nbsp;                                           &quot;Enter the name of the Portfolio:&quot;,
+&nbsp;                                           &quot;Portfolio name is invalid or already exists please &quot;
+&nbsp;                                                   + &quot;enter a new name:&quot;);
+&nbsp;
+&nbsp;    // Number Of Stocks input
+<b class="fc">&nbsp;    Integer numberOfStocks = takeNumericInput((s -&gt; s &lt;= 0), intParsingFn,</b>
+&nbsp;                                              &quot;How many stocks do you want to add to the &quot;
+&nbsp;                                                      + &quot;portfolio?&quot;,
+&nbsp;                                              &quot;Please enter valid positive number&quot;);
+&nbsp;
+&nbsp;    // Get stock information
+<b class="fc">&nbsp;    List&lt;String&gt; stocks = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    for (int i = 1; i &lt;= numberOfStocks; i++) {</b>
+&nbsp;      // take stock name/symbol
+<b class="fc">&nbsp;      String stockName = takeStringInput(iModel.validateStockNameSymbol(),</b>
+&nbsp;                                         &quot;Enter the name or symbol for stock &quot; + i + &quot;:&quot;,
+&nbsp;                                         &quot;No such stock name or stock Symbol found please enter a&quot;
+&nbsp;                                                 + &quot; valid input&quot;);
+&nbsp;
+&nbsp;      // take quantity of stocks as input
+<b class="fc">&nbsp;      Integer stockQty = takeNumericInput((s -&gt; s &lt;= 0), intParsingFn,</b>
+&nbsp;                                          &quot;Enter the quantity of shares purchased for stock &quot; + i
+&nbsp;                                                  + &quot;:&quot;,
+&nbsp;                                          &quot;Please enter a valid positive number for the quantity &quot;
+&nbsp;                                                  + &quot;of stocks&quot;);
+<b class="fc">&nbsp;      LocalDate dateAdded = takeDateInput((d -&gt; d.isAfter(LocalDate.now())),</b>
+&nbsp;                                          &quot;Please Enter the date at which you bought the stock &quot; + i
+&nbsp;                                                  + &quot;(yyyy-mm-dd) &quot;,
+&nbsp;                                          &quot;Please Enter a valid date&quot;);
+&nbsp;      // once all validations are passed add it to the list
+<b class="fc">&nbsp;      stocks.add(stockName + Util.FILE_OUTPUT_SEPARATOR + stockQty.doubleValue()</b>
+&nbsp;                         + Util.FILE_OUTPUT_SEPARATOR
+&nbsp;                         + dateAdded);
+&nbsp;    }
+&nbsp;    try {
+<b class="fc">&nbsp;      iModel.createInflexiblePortfolio(portfolioName, stocks);</b>
+<b class="nc">&nbsp;    } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void showPortfolioComp() {
+<b class="fc">&nbsp;    int portfolioNumber = 0;</b>
+&nbsp;    try {
+<b class="fc">&nbsp;      portfolioNumber = showPortfoliosAndTakeUserInput(&quot;Enter id of the portfolio you want see &quot;</b>
+&nbsp;                                                               + &quot;the composition for:&quot;);
+<b class="fc">&nbsp;    } catch (RuntimeException e) {</b>
+<b class="fc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;    LocalDate compositionDate = takeDateInput((d -&gt; d.isAfter(LocalDate.now())), &quot;Enter the date &quot;</b>
+&nbsp;            + &quot;for which you want to see the composition(yyyy-mm-dd):&quot;, &quot;Please enter a valid &quot;
+&nbsp;                                                      + &quot;date format.&quot;);
+<b class="fc">&nbsp;    List&lt;String&gt; portfolioComp = null;</b>
+&nbsp;    try {
+<b class="fc">&nbsp;      portfolioComp = iModel.getPortfolioComposition(portfolioNumber, compositionDate);</b>
+<b class="nc">&nbsp;    } catch (IllegalArgumentException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;    iView.getPortfolioComposition(portfolioComp);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void showPortfolioValueOnADate() {
+<b class="nc">&nbsp;    int portfolioNumber = 0;</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      portfolioNumber = showPortfoliosAndTakeUserInput(&quot;Enter id of the portfolio you want see &quot;</b>
+&nbsp;                                                               + &quot;the value for:&quot;);
+<b class="nc">&nbsp;    } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="nc">&nbsp;    }</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      LocalDate inputDate = takeDateInput(d -&gt; d.isAfter(LocalDate.now()), &quot;Enter the date when &quot;</b>
+&nbsp;              + &quot;the stock price needs to displayed(yyyy-mm-dd):&quot;, &quot;Please enter a valid date.&quot;);
+&nbsp;
+&nbsp;      // get the prices of the stocks for the given date
+<b class="nc">&nbsp;      StockPriceResponseWrapper output = iModel.getPortfolioValueOnDate(portfolioNumber, inputDate);</b>
+<b class="nc">&nbsp;      iView.showStockResponseWrapper(output, inputDate);</b>
+<b class="nc">&nbsp;    } catch (IllegalArgumentException iag) {</b>
+<b class="nc">&nbsp;      iView.displayText(iag.getMessage());</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void editPortfolio() {
+<b class="fc">&nbsp;    int portfolioNumber = 0;</b>
+&nbsp;    try {
+<b class="fc">&nbsp;      portfolioNumber = showPortfoliosAndTakeUserInput(&quot;Enter id of the portfolio you want to &quot;</b>
+&nbsp;                                                               + &quot;edit:&quot;);
+<b class="nc">&nbsp;    } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;    transactStock(portfolioNumber);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void showCostBasis() {
+<b class="nc">&nbsp;    int portfolioNumber = 0;</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      portfolioNumber = showPortfoliosAndTakeUserInput(&quot;Enter id of the portfolio you want to see&quot;</b>
+&nbsp;                                                               + &quot; the cost basis for:&quot;);
+<b class="nc">&nbsp;    } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    LocalDate transactionDate = takeDateInput((d -&gt; d.isAfter(LocalDate.now())), &quot;Enter the date &quot;</b>
+&nbsp;            + &quot;for which you want to see the cost basis for(yyyy-mm-dd):&quot;, &quot;Please enter a valid&quot;
+&nbsp;                                                      + &quot;date format.&quot;);
+&nbsp;    try {
+<b class="nc">&nbsp;      double costBasis = iModel.getCostBasis(portfolioNumber, transactionDate);</b>
+<b class="nc">&nbsp;      iView.displayText(String.format(&quot;Cost basis for the portfolio on &quot; + transactionDate</b>
+<b class="nc">&nbsp;                                              + &quot;is : $%.2f&quot;, costBasis));</b>
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  private void displayGraph() {
+<b class="nc">&nbsp;    int portfolioNumber = 0;</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      portfolioNumber = showPortfoliosAndTakeUserInput(&quot;Enter id of the portfolio you want to see&quot;</b>
+&nbsp;                                                               + &quot; the graph for:&quot;);
+<b class="nc">&nbsp;    } catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;      iView.displayText(e.getMessage());</b>
+&nbsp;      return;
+<b class="nc">&nbsp;    }</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      LocalDate startDate = LocalDate.now();</b>
+<b class="nc">&nbsp;      LocalDate endDate = LocalDate.now();</b>
+&nbsp;      do {
+<b class="nc">&nbsp;        if (startDate.isAfter(endDate)) {</b>
+<b class="nc">&nbsp;          iView.displayText(&quot;Start Date cannot be after End Date, please reenter the &quot; + &quot;dates\n&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        startDate = takeDateInput(d -&gt; d.isAfter(LocalDate.now()), &quot;Enter the start date to &quot;</b>
+&nbsp;                + &quot;display the graph(yyyy-mm-dd)&quot;, &quot;Please enter a valid date.&quot;);
+&nbsp;
+<b class="nc">&nbsp;        endDate = takeDateInput(d -&gt; d.isAfter(LocalDate.now()), &quot;Enter the end date to display &quot;</b>
+&nbsp;                + &quot;the graph(yyyy-mm-dd)&quot;, &quot;Please enter a valid date.&quot;);
+&nbsp;      }
+<b class="nc">&nbsp;      while (startDate.isAfter(endDate));</b>
+&nbsp;
+<b class="nc">&nbsp;      List&lt;String&gt; graphOutput = iModel.fetchGraphData(portfolioNumber, startDate, endDate);</b>
+<b class="nc">&nbsp;      iView.displayGraph(graphOutput);</b>
+<b class="nc">&nbsp;    } catch (IllegalArgumentException iag) {</b>
+<b class="nc">&nbsp;      iView.displayText(iag.getMessage());</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void start() {
+<b class="fc">&nbsp;    boolean quit = false;</b>
+<b class="fc">&nbsp;    while (!quit) {</b>
+<b class="fc">&nbsp;      iView.displayText(MAIN_MENU_ITEMS);</b>
+<b class="fc">&nbsp;      String option = in.nextLine();</b>
+<b class="fc">&nbsp;      switch (option) {</b>
+&nbsp;        case &quot;1&quot;:
+<b class="fc">&nbsp;          createInflexiblePortfolio();</b>
+<b class="fc">&nbsp;          break;</b>
+&nbsp;        case &quot;2&quot;:
+<b class="fc">&nbsp;          createFlexiblePortfolio();</b>
+<b class="fc">&nbsp;          break;</b>
+&nbsp;        case &quot;3&quot;:
+<b class="fc">&nbsp;          showPortfolioComp();</b>
+<b class="fc">&nbsp;          break;</b>
+&nbsp;        case &quot;4&quot;:
+<b class="nc">&nbsp;          showPortfolioValueOnADate();</b>
+<b class="nc">&nbsp;          break;</b>
+&nbsp;        case &quot;5&quot;:
+&nbsp;          // load portfolio from a file
+<b class="nc">&nbsp;          iView.displayText(&quot;Please place your file at the path res/user_flexible.csv\n&quot;</b>
+&nbsp;                                    + &quot;Please make sure the data in the file is in format:\n&quot;
+&nbsp;                                    + &quot;Stock Details|Quantity|Date\nAAPL|34|2022-05-12\nCarvana &quot;
+&nbsp;                                    + &quot;Co|87|2022-05-12\n&quot;);
+&nbsp;
+<b class="nc">&nbsp;          String portfolioName = takeStringInput(iModel.isValidPortfolioName(), &quot;What would you &quot;</b>
+&nbsp;                  + &quot;like your portfolio to be called?&quot;, &quot;Portfolio name is invalid or is already &quot;
+&nbsp;                                                         + &quot;used&quot;);
+&nbsp;          try {
+<b class="nc">&nbsp;            iView.displayText(iModel.loadFlexiblePortfolioFromFile(portfolioName));</b>
+<b class="nc">&nbsp;          } catch (IllegalArgumentException e) {</b>
+<b class="nc">&nbsp;            iView.displayText(e.getMessage());</b>
+<b class="nc">&nbsp;          }</b>
+<b class="nc">&nbsp;          break;</b>
+&nbsp;        case &quot;6&quot;:
+&nbsp;          // load portfolio from a file
+<b class="nc">&nbsp;          iView.displayText(&quot;Please place your file at the path res/user_inflexible.csv\n&quot;</b>
+&nbsp;                                    + &quot;Please make sure the data in the file is in format:\n&quot;
+&nbsp;                                    + &quot;StockName|Quantity|TransactionDate|TransactionType\n&quot;
+&nbsp;                                    + &quot;ABBV|35|2022-04-12|b\n&quot;
+&nbsp;                                    + &quot;AAPL|100&quot; +
+&nbsp;                                    &quot;|2022-05-10|b&quot;);
+&nbsp;
+<b class="nc">&nbsp;          String portfolioNameInFlexible = takeStringInput(iModel.isValidPortfolioName(), &quot;What &quot;</b>
+&nbsp;                  + &quot;would you like your portfolio to be called?&quot;, &quot;Portfolio name is invalid or &quot;
+&nbsp;                                                                   + &quot;is already used&quot;);
+&nbsp;          try {
+<b class="nc">&nbsp;            iView.displayText(iModel.loadInFlexiblePortfolioFromFile(portfolioNameInFlexible));</b>
+<b class="nc">&nbsp;          } catch (Exception e) {</b>
+<b class="nc">&nbsp;            iView.displayText(e.getMessage());</b>
+<b class="nc">&nbsp;          }</b>
+<b class="nc">&nbsp;          break;</b>
+&nbsp;        case &quot;7&quot;:
+<b class="fc">&nbsp;          editPortfolio();</b>
+<b class="fc">&nbsp;          break;</b>
+&nbsp;        case &quot;8&quot;:
+<b class="nc">&nbsp;          showCostBasis();</b>
+<b class="nc">&nbsp;          break;</b>
+&nbsp;        case &quot;9&quot;:
+<b class="nc">&nbsp;          Double commission = takeNumericInput((s -&gt; s &lt; 0), doubleParsingFn, &quot;Enter the new &quot;</b>
+&nbsp;                  + &quot;commission that you want to configure in the system&quot;, &quot;Commission fee cannot&quot;
+&nbsp;                                                       + &quot;be negative, please enter a valid &quot;
+&nbsp;                  + &quot;positive number&quot;);
+<b class="nc">&nbsp;          iModel.setCommission(commission);</b>
+<b class="nc">&nbsp;          break;</b>
+&nbsp;        case &quot;10&quot;:
+<b class="nc">&nbsp;          displayGraph();</b>
+<b class="nc">&nbsp;          break;</b>
+&nbsp;        case &quot;11&quot;:
+<b class="fc">&nbsp;          quit = true;</b>
+<b class="fc">&nbsp;          break;</b>
+&nbsp;        default:
+<b class="fc">&nbsp;          iView.displayText(&quot;Invalid option, please enter a valid option&quot;);</b>
+&nbsp;      }
+<b class="fc">&nbsp;    }</b>
+&nbsp;  }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AlphaVantageImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: AlphaVantageImpl (main.java.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AlphaVantageImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.2%
+  </span>
+  <span class="absValue">
+    (1/16)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AlphaVantageImpl$MockitoMock$ym88y3UZ</td>
+  </tr>
+  <tr>
+    <td class="name">AlphaVantageImpl$MockitoMock$ym88y3UZ$auxiliary$EHe6cY9S</td>
+  </tr>
+  <tr>
+    <td class="name">AlphaVantageImpl$MockitoMock$ym88y3UZ$auxiliary$h9qXGzpG</td>
+  </tr>
+  <tr>
+    <td class="name">AlphaVantageImpl$MockitoMock$ym88y3UZ$auxiliary$S84r6y7x</td>
+  </tr>
+  <tr>
+    <td class="name">AlphaVantageImpl$MockitoMock$ym88y3UZ$auxiliary$y5TMDDIS</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.2%
+  </span>
+  <span class="absValue">
+    (1/16)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.net.MalformedURLException;
+&nbsp;import java.net.URL;
+&nbsp;
+&nbsp;/**
+&nbsp; * This method extends the abstractPriceProvider and is responsible for providing the price of a
+&nbsp; * particular stock on a given date from the AlphaVantageAPI.
+&nbsp; */
+<b class="fc">&nbsp;public class AlphaVantageImpl extends AbstractPriceProvider {</b>
+&nbsp;
+&nbsp;  private static final String API_KEY = &quot;4UG9PSAUSGKVJJHD&quot;;
+&nbsp;  private static final String TEMPLATE_URL = &quot;https://www.alphavantage.co/query?function=TIME_&quot;
+&nbsp;          + &quot;SERIES_DAILY&amp;symbol=stockSymbolParam&amp;outputsize=full&amp;datatype=csv&amp;apikey=&quot; + API_KEY;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns all the historical prices of the given stock using the alphaVantageAPI.
+&nbsp;   *
+&nbsp;   * @param stockSymbol stock for which prices are required.
+&nbsp;   * @return array of strings wherein each string represent price information of the stock for a
+&nbsp;   *        day.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public String[] getPricesFromAPI(String stockSymbol) {
+&nbsp;    // Hit alpha vantage api
+<b class="nc">&nbsp;    String stringUrl = TEMPLATE_URL.replace(&quot;stockSymbolParam&quot;, stockSymbol);</b>
+<b class="nc">&nbsp;    URL url = null;</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      url = new URL(stringUrl);</b>
+<b class="nc">&nbsp;    } catch (MalformedURLException e) {</b>
+<b class="nc">&nbsp;      throw new RuntimeException(&quot;the alphavantage API has either changed or no longer works&quot;);</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    InputStream in = null;</b>
+<b class="nc">&nbsp;    StringBuilder output = new StringBuilder();</b>
+&nbsp;
+&nbsp;    try {
+<b class="nc">&nbsp;      in = url.openStream();</b>
+&nbsp;      int b;
+<b class="nc">&nbsp;      while ((b = in.read()) != -1) {</b>
+<b class="nc">&nbsp;        output.append((char) b);</b>
+&nbsp;      }
+<b class="nc">&nbsp;    } catch (IOException e) {</b>
+<b class="nc">&nbsp;      throw new RuntimeException(&quot;Exception in fetching data from &quot;</b>
+&nbsp;                                         + &quot;AlphaVantage API for stock&quot; + stockSymbol);
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    return output.toString().split(System.lineSeparator());</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

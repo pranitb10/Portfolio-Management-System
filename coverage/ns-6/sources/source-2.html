@@ -1,0 +1,123 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > IView</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.view</a>
+</div>
+
+<h1>Coverage Summary for Class: IView (main.java.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IView</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.view;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import main.java.model.entities.StockPriceResponseWrapper;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface represents the view part of the MVC architecture for portfolio management
+&nbsp; * application. View is responsible for showing the output to the User. View formats the data
+&nbsp; * received  from the controller into a human-readable format.
+&nbsp; */
+&nbsp;public interface IView {
+&nbsp;  /**
+&nbsp;   * This method displays the string received from the controller to the user.
+&nbsp;   *
+&nbsp;   * @param text text string that needs to be displayed in the view.
+&nbsp;   */
+&nbsp;  void displayText(String text);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the portfolio table in a formatted output to the user.
+&nbsp;   *
+&nbsp;   * @param listOfPortfolio List of strings, wherein each string contains a portfolioName and the
+&nbsp;   *                        date of creation.
+&nbsp;   */
+&nbsp;  void createPortfolioTable(List&lt;String&gt; listOfPortfolio);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the portfolio value in a formatted output.
+&nbsp;   *
+&nbsp;   * @param response  StockPriceResponseWrapper object which internally has successList consisting
+&nbsp;   *                  of portfolio stocks and its value at a currentDate...along with it failure
+&nbsp;   *                  stocks for which price retrieval failed
+&nbsp;   * @param inputDate date for which the portfolio value is being displayed
+&nbsp;   */
+&nbsp;  void showStockResponseWrapper(StockPriceResponseWrapper response, LocalDate inputDate);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the portfolio composition to the user in a formatted output.
+&nbsp;   *
+&nbsp;   * @param listOfStocks list of strings, where each string represent the stock information like
+&nbsp;   *                     symbol, Quantity, name etc.
+&nbsp;   */
+&nbsp;  void getPortfolioComposition(List&lt;String&gt; listOfStocks);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method displays the graph output.
+&nbsp;   *
+&nbsp;   * @param graphOutput list of strings wherein each string in the list has following information
+&nbsp;   *                    1. Scale of the time
+&nbsp;   *                    2. The normalized price
+&nbsp;   *                    3. The actual price that needs to be displayed
+&nbsp;   */
+&nbsp;  void displayGraph(List&lt;String&gt; graphOutput);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

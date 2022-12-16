@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Portfolio</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Portfolio (main.java.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Portfolio</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import main.java.model.entities.PurchasedStock;
+&nbsp;import main.java.model.entities.StockPriceResponseWrapper;
+&nbsp;import main.java.model.entities.StockWeight;
+&nbsp;import main.java.model.entities.Strategy;
+&nbsp;import main.java.model.util.Util;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface represents a portfolio, it has all the methods that are required by the model to
+&nbsp; * operate on it.
+&nbsp; */
+&nbsp;public interface Portfolio {
+&nbsp;  List&lt;Strategy&gt; getStrategies();
+&nbsp;  void setStrategies(List&lt;Strategy&gt; strategies);
+&nbsp;
+&nbsp;  void executePendingTransactions(PriceProvider priceProvider);
+&nbsp;  void executeStrategy(List&lt;StockWeight&gt; stockAndWeights, Double investmentAmount,
+&nbsp;          LocalDate dateOfTransaction, Double commission,PriceProvider priceProvider) throws RuntimeException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the composition of a given portfolio.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;A composition is basically how many stocks(quantity) of a particular company
+&nbsp;   * (ticker) are owned by a user.&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param date Date on which portfolio composition needs to be shown.
+&nbsp;   *
+&nbsp;   * @return List of formatted strings, where each string represents a stock and its quantity
+&nbsp;   *         present in the portfolio.
+&nbsp;   */
+&nbsp;  List&lt;String&gt; getPortfolioComposition(LocalDate date);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the name of a given portfolio.
+&nbsp;   *
+&nbsp;   * @return The name of portfolio in String
+&nbsp;   */
+&nbsp;  String getPortfolioName();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the date added of a given portfolio.
+&nbsp;   *
+&nbsp;   * @return The date at which the portfolio is added.
+&nbsp;   */
+&nbsp;  LocalDate getDateAdded();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the list of stocks present in the given portfolio.
+&nbsp;   *
+&nbsp;   * @return List of purchased stock for the portfolio
+&nbsp;   */
+&nbsp;  List&lt;PurchasedStock&gt; getStocks();
+&nbsp;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns the portfolio value on a given date.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;It returns a stock response wrapper, which contains a two list. A list of success which
+&nbsp;   * have been successfully queries and list of failures which failed while querying.
+&nbsp;   * &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param date The date on which value needs to be determined.
+&nbsp;   * @param priceProvider The price provider object which provides the price of stocks on
+&nbsp;   *         given date
+&nbsp;   *
+&nbsp;   * @return StockPriceResponseWrapper object which internally has two list:- 1.List of Successful
+&nbsp;   *         stock records for which price was fetched successfully. 2.List of unsuccessful records
+&nbsp;   *         for which the price fetching failed.
+&nbsp;   */
+&nbsp;  StockPriceResponseWrapper getPortfolioValueOnDate(LocalDate date, PriceProvider priceProvider);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method is used to transact(buy/sell) a stock on a portfolio.
+&nbsp;   *
+&nbsp;   * @param stockSymbol stockSymbol that needs to be transacted.
+&nbsp;   * @param stockName name of the stock that needs to be transacted.
+&nbsp;   * @param stockQty Quantity of the stock transacted.
+&nbsp;   * @param transactionType type of the transaction(buy/sell).
+&nbsp;   * @param transactionDate date of the transaction.
+&nbsp;   * @param commission commission associated with the transaction.
+&nbsp;   *
+&nbsp;   * @return Portfolio object after doing transaction of the given stock in the portfolio.
+&nbsp;   *
+&nbsp;   * @throws RuntimeException 1.If the transaction is invalid or if it cannot co-exist with the
+&nbsp;   *                          previously mentioned transactions for a particular stock.
+&nbsp;   */
+&nbsp;  Portfolio transactStock(String stockSymbol, String stockName, Double stockQty,
+&nbsp;                          Util.TransactionType transactionType, LocalDate transactionDate,
+&nbsp;                          Double commission) throws RuntimeException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows us to return the cost basis on a portfolio until a date specified by the
+&nbsp;   * user.
+&nbsp;   * &lt;p&gt;
+&nbsp;   * For a given set of transactions, it would basically calculate the buy order until the day which
+&nbsp;   * user specifies. If there are no transactions the cost basis is zero. It will also consider all
+&nbsp;   * the commissions which where paid by the user for all the previous transactions.
+&nbsp;   * &lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param date date on which cost basis needs to be determined
+&nbsp;   * @param priceProvider the price provider through which prices would be determined.
+&nbsp;   *
+&nbsp;   * @return the cost basis of portfolio until that date
+&nbsp;   *
+&nbsp;   * @throws RuntimeException 1.If some error occurred while fetching the price of stock on a
+&nbsp;   *                          particular date.
+&nbsp;   */
+&nbsp;  double getCostBasis(LocalDate date, PriceProvider priceProvider) throws RuntimeException;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

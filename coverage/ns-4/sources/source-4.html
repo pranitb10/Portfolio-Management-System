@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StockPriceResponseWrapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model.entities</a>
+</div>
+
+<h1>Coverage Summary for Class: StockPriceResponseWrapper (main.java.model.entities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StockPriceResponseWrapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model.entities;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * A wrapper response class that is used for communication between model and the controller. It
+&nbsp; * internally has a string of successful and unsuccessful records that were processed while
+&nbsp; * fetching the prices of the stocks.
+&nbsp; */
+&nbsp;public class StockPriceResponseWrapper {
+&nbsp;  private final List&lt;String&gt; successList;
+&nbsp;  private final List&lt;String&gt; failureList;
+&nbsp;
+&nbsp;  private final Double portfolioValue;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * constructs object of the wrapper response object.
+&nbsp;   *
+&nbsp;   * @param successList    list of successful records that were processed.
+&nbsp;   * @param failureList    list of unsuccessful records that failed while processing.
+&nbsp;   * @param portfolioValue portfolio Value on the user given date.
+&nbsp;   */
+&nbsp;  public StockPriceResponseWrapper(List&lt;String&gt; successList, List&lt;String&gt; failureList,
+<b class="fc">&nbsp;                                   Double portfolioValue) {</b>
+<b class="fc">&nbsp;    this.successList = successList;</b>
+<b class="fc">&nbsp;    this.failureList = failureList;</b>
+<b class="fc">&nbsp;    this.portfolioValue = portfolioValue;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns portfolio value on the user given date.
+&nbsp;   *
+&nbsp;   * @return value of portfolio on the user provided date.
+&nbsp;   */
+&nbsp;  public Double getPortfolioValue() {
+<b class="fc">&nbsp;    return portfolioValue;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns list of successful records.
+&nbsp;   *
+&nbsp;   * @return successfully processed stocks list.
+&nbsp;   */
+&nbsp;  public List&lt;String&gt; getSuccessList() {
+<b class="fc">&nbsp;    return successList;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns failure list.
+&nbsp;   *
+&nbsp;   * @return List of failed records while processing.
+&nbsp;   */
+&nbsp;  public List&lt;String&gt; getFailureList() {
+<b class="fc">&nbsp;    return failureList;</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

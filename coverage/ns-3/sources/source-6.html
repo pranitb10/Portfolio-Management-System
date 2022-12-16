@@ -1,0 +1,248 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > InFlexiblePortfolio</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: InFlexiblePortfolio (main.java.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InFlexiblePortfolio</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.7%
+  </span>
+  <span class="absValue">
+    (29/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;import main.java.model.entities.PurchasedStock;
+&nbsp;import main.java.model.entities.StockPriceResponseWrapper;
+&nbsp;import main.java.model.entities.StockWeight;
+&nbsp;import main.java.model.util.Util;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class represents an Inflexible Portfolio. An Inflexible portfolio is a portfolio which
+&nbsp; * cannot be edited by the user once created.Moreover, only purchasing of stocks is allowed in an
+&nbsp; * inflexible portfolio.
+&nbsp; */
+&nbsp;public class InFlexiblePortfolio extends AbstractPortfolio {
+<b class="fc">&nbsp;  private final String portfolioType = &quot;inflexible&quot;;</b>
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Constructs an object of the Inflexible portfolio for given list of  purchased stocks given by
+&nbsp;   * the user.
+&nbsp;   *
+&nbsp;   * @param portfolioName Portfolio name provided by the user
+&nbsp;   * @param dateAdded date when the portfolio was added
+&nbsp;   * @param stocks list of purchased stocks by the user
+&nbsp;   */
+&nbsp;  public InFlexiblePortfolio(String portfolioName, LocalDate dateAdded,
+&nbsp;                             List&lt;PurchasedStock&gt; stocks) {
+<b class="fc">&nbsp;    super(portfolioName, dateAdded, stocks);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void executePendingTransactions(PriceProvider priceProvider) {
+&nbsp;
+<b class="fc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void executeStrategy(List&lt;StockWeight&gt; stockAndWeights, Double investmentAmount,
+&nbsp;          LocalDate dateOfTransaction, Double commission, PriceProvider priceProvider)
+&nbsp;          throws RuntimeException {
+&nbsp;
+<b class="nc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method gives the composition of a given portfolio.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;A composition is basically how many stocks(quantity) of a particular company
+&nbsp;   * (ticker) are owned by a user. For an inflexible portfolio if same stock is bought on multiple
+&nbsp;   * dates, than it returns the latest quantity of the stocks left with the user, irrespective of
+&nbsp;   * the date provided in the argument. .&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param date the date on which portfolio composition is required.
+&nbsp;   *
+&nbsp;   * @return List of string containing composition of portfolio
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public List&lt;String&gt; getPortfolioComposition(LocalDate date) {
+<b class="fc">&nbsp;    return stocks.stream().map(p -&gt; p.getStockName() + Util.FILE_OUTPUT_SEPARATOR</b>
+<b class="fc">&nbsp;                         + p.getStockSymbol() + Util.FILE_OUTPUT_SEPARATOR</b>
+<b class="fc">&nbsp;                         + p.getStockTransactions().last().getQuantityAfterTransaction())</b>
+<b class="fc">&nbsp;                 .collect(Collectors.toList());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows us to get the value of portfolio on a particular date.
+&nbsp;   *
+&nbsp;   * @param date date on which portfolio value needs to decided.
+&nbsp;   * @param priceProvider Price provider which will be used to get the prices of stocks on
+&nbsp;   *         particular dates.
+&nbsp;   *
+&nbsp;   * @return StockPriceResponseWrapper object which internally has two list:- 1.List of Successful
+&nbsp;   *         stock records for which price was fetched successfully. 2.List of unsuccessful records
+&nbsp;   *         for which the price fetching failed.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public StockPriceResponseWrapper getPortfolioValueOnDate(LocalDate date,
+&nbsp;                                                           PriceProvider priceProvider) {
+<b class="fc">&nbsp;    List&lt;String&gt; successList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    List&lt;String&gt; failureList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    Double portfolioValue = 0d;</b>
+<b class="fc">&nbsp;    for (PurchasedStock purchasedStock : stocks) {</b>
+&nbsp;      try {
+<b class="fc">&nbsp;        Double price = priceProvider.getPriceOfStock(purchasedStock.getStockSymbol(), date);</b>
+<b class="fc">&nbsp;        portfolioValue += price * purchasedStock.getStockTransactions().last()</b>
+<b class="fc">&nbsp;                                                .getQuantityAfterTransaction();</b>
+<b class="fc">&nbsp;        successList.add(purchasedStock.getStockName() + Util.FILE_OUTPUT_SEPARATOR</b>
+<b class="fc">&nbsp;                                + purchasedStock.getStockSymbol() + Util.FILE_OUTPUT_SEPARATOR</b>
+&nbsp;                                + purchasedStock
+<b class="fc">&nbsp;                .getStockTransactions().last().getQuantityAfterTransaction()</b>
+&nbsp;                                + Util.FILE_OUTPUT_SEPARATOR + price + Util.FILE_OUTPUT_SEPARATOR
+<b class="fc">&nbsp;                                + price</b>
+<b class="fc">&nbsp;                * purchasedStock.getStockTransactions().last().getQuantityAfterTransaction());</b>
+<b class="fc">&nbsp;      } catch (RuntimeException e) {</b>
+<b class="fc">&nbsp;        failureList.add(purchasedStock.getStockName() + Util.FILE_OUTPUT_SEPARATOR</b>
+<b class="fc">&nbsp;                                + purchasedStock.getStockSymbol() + Util.FILE_OUTPUT_SEPARATOR</b>
+&nbsp;                                + purchasedStock
+<b class="fc">&nbsp;                .getStockTransactions().last().getQuantityAfterTransaction());</b>
+<b class="fc">&nbsp;      }</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;    return new StockPriceResponseWrapper(successList, failureList, portfolioValue);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Since editing a portfolio is not allowed for an inflexible portfolio. This method throws an
+&nbsp;   * exception when called for an inflexible portfolio.
+&nbsp;   *
+&nbsp;   * @param stockSymbol the stock symbol which needs to transacted
+&nbsp;   * @param stockName the stock name which needs to transacted
+&nbsp;   * @param stockQty the quantity which needs to transacted
+&nbsp;   * @param transactionType the transaction type
+&nbsp;   * @param transactionDate the transaction date
+&nbsp;   * @param commission the commission allocated on transaction
+&nbsp;   *
+&nbsp;   * @return portfolio after adding the transactions
+&nbsp;   *
+&nbsp;   * @throws RuntimeException If this method is called for inflexible portfolio.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public Portfolio transactStock(String stockSymbol, String stockName, Double stockQty,
+&nbsp;                                 Util.TransactionType transactionType, LocalDate transactionDate,
+&nbsp;                                 Double commission) throws RuntimeException {
+<b class="fc">&nbsp;    throw new RuntimeException(&quot;Transaction is not allowed in a Inflexible Portfolio&quot;);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method throws an exception when called for an inflexible portfolio, as cost basis is not
+&nbsp;   * supported for the same.
+&nbsp;   *
+&nbsp;   * @param date date on which cost basis needs to be determined
+&nbsp;   * @param priceProvider the price provider through prices would be determined.
+&nbsp;   *
+&nbsp;   * @return the cost basis of portfolio until that date
+&nbsp;   *
+&nbsp;   * @throws RuntimeException If this method is called for an inflexible portfolio.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public double getCostBasis(LocalDate date, PriceProvider priceProvider) throws RuntimeException {
+<b class="fc">&nbsp;    String outputMsg = &quot;Displaying Cost basis is not supported for inflexible portfolios, &quot;</b>
+&nbsp;            + &quot;please call other supported operations like get value, get composition etc &quot;
+&nbsp;            + &quot;according to your liking&quot;;
+<b class="fc">&nbsp;    throw new RuntimeException(outputMsg);</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

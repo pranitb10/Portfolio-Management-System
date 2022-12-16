@@ -1,0 +1,66 @@
+[
+  {
+    "portfolioType": "flexible",
+    "portfolioName": "P1",
+    "dateAdded": "2022-12-13",
+    "stocks": [
+      {
+        "stockTransactions": [
+          {
+            "transactionDate": "2020-05-20",
+            "transactionType": "BUY",
+            "quantityAfterTransaction": 100.0,
+            "commission": 5.0
+          }
+        ],
+        "stockName": "APPLE INC",
+        "stockSymbol": "AAPL"
+      },
+      {
+        "stockTransactions": [
+          {
+            "transactionDate": "2020-05-20",
+            "transactionType": "BUY",
+            "quantityAfterTransaction": 150.0,
+            "commission": 5.0
+          }
+        ],
+        "stockName": "MICROSOFT CORP",
+        "stockSymbol": "MSFT"
+      }
+    ],
+    "strategies": []
+  },
+  {
+    "portfolioType": "flexible",
+    "portfolioName": "Pms",
+    "dateAdded": "2022-12-13",
+    "stocks": [
+      {
+        "stockTransactions": [
+          {
+            "transactionDate": "2020-05-20",
+            "transactionType": "BUY",
+            "quantityAfterTransaction": 100.0,
+            "commission": 5.0
+          }
+        ],
+        "stockName": "APPLE INC",
+        "stockSymbol": "AAPL"
+      },
+      {
+        "stockTransactions": [
+          {
+            "transactionDate": "2020-05-20",
+            "transactionType": "BUY",
+            "quantityAfterTransaction": 150.0,
+            "commission": 5.0
+          }
+        ],
+        "stockName": "MICROSOFT CORP",
+        "stockSymbol": "MSFT"
+      }
+    ],
+    "strategies": []
+  }
+]

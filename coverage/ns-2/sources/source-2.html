@@ -1,0 +1,82 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > IController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: IController (main.java.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">IController</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.controller;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface represents the controller part of the MVC architecture of the application.
+&nbsp; * It is responsible for handling the flow of the application. It is responsible for taking inputs
+&nbsp; * from the user, and directs view to show output to the user. Once it receives input from user
+&nbsp; * it can ask model for any validation or any processing that needs to be done in the application.
+&nbsp; */
+&nbsp;public interface IController {
+&nbsp;  /**
+&nbsp;   * This method is the start of the program. Once started depending on the user inputs it will
+&nbsp;   * handle the complete flow of the application.
+&nbsp;   */
+&nbsp;  void start();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

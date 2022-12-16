@@ -1,0 +1,237 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StockTransaction</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model.entities</a>
+</div>
+
+<h1>Coverage Summary for Class: StockTransaction (main.java.model.entities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StockTransaction</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (14/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model.entities;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;import main.java.model.util.Util;
+&nbsp;
+&nbsp;/**
+&nbsp; * This represents a particular Stock Transaction. It holds information like the type of
+&nbsp; * transaction(buy/sell), transactionDate,commission,and the quantity left with the user after the
+&nbsp; * transaction.
+&nbsp; */
+&nbsp;public class StockTransaction implements Comparable&lt;StockTransaction&gt; {
+&nbsp;  private final LocalDate transactionDate;
+&nbsp;  Util.TransactionType transactionType;
+<b class="fc">&nbsp;  private Double quantityAfterTransaction = 0d;</b>
+&nbsp;  private Double commission;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Constructs a Stock Transaction object associated with a certain stock.
+&nbsp;   *
+&nbsp;   * @param transactionDate date when then transaction is conducted.
+&nbsp;   * @param quantityAfterTransaction the quantity of stock left with the user after
+&nbsp;   *         transaction.
+&nbsp;   * @param commission the commission associated with the transaction.
+&nbsp;   * @param transactionType type of transaction whether buy or sell.
+&nbsp;   */
+&nbsp;  public StockTransaction(LocalDate transactionDate, Double quantityAfterTransaction,
+<b class="fc">&nbsp;                          Double commission, Util.TransactionType transactionType) {</b>
+<b class="fc">&nbsp;    this.transactionDate = transactionDate;</b>
+<b class="fc">&nbsp;    this.quantityAfterTransaction = quantityAfterTransaction;</b>
+<b class="fc">&nbsp;    this.commission = commission;</b>
+<b class="fc">&nbsp;    this.transactionType = transactionType;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * An overloaded constructor which builds transaction with just the date.
+&nbsp;   *
+&nbsp;   * @param transactionDate date when then transaction is conducted
+&nbsp;   */
+<b class="fc">&nbsp;  public StockTransaction(LocalDate transactionDate) {</b>
+<b class="fc">&nbsp;    this.transactionDate = transactionDate;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Determining whether two transaction objects are equal or not.
+&nbsp;   *
+&nbsp;   * &lt;p&gt;Since we maintain a Navigable set of these stock transactions sorted by the date.
+&nbsp;   * Hence, the equals method returns true if two transactions have same date. Another transaction
+&nbsp;   * received on same date is then grouped with the existing one.&lt;/p&gt;
+&nbsp;   *
+&nbsp;   * @param o Input object to compare with Transaction Object.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public boolean equals(Object o) {
+<b class="nc">&nbsp;    if (this == o) {</b>
+<b class="nc">&nbsp;      return true;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    if (!(o instanceof StockTransaction)) {</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    StockTransaction that = (StockTransaction) o;</b>
+<b class="nc">&nbsp;    return getTransactionDate().equals(that.getTransactionDate());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns hashcode of the transaction object.
+&nbsp;   *
+&nbsp;   * @return hashcode of the transaction.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public int hashCode() {
+<b class="nc">&nbsp;    return Objects.hash(getTransactionDate());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns commission that is associated with the current object.
+&nbsp;   *
+&nbsp;   * @return commission that was inccured for the transaction.
+&nbsp;   */
+&nbsp;  public Double getCommission() {
+<b class="fc">&nbsp;    return commission;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns the transactionDate associated with the current transaction.
+&nbsp;   *
+&nbsp;   * @return date of the current transaction.
+&nbsp;   */
+&nbsp;  public LocalDate getTransactionDate() {
+<b class="fc">&nbsp;    return transactionDate;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns the quantity left with the user after the transaction.
+&nbsp;   *
+&nbsp;   * @return quantity left with the user.
+&nbsp;   */
+&nbsp;  public Double getQuantityAfterTransaction() {
+<b class="fc">&nbsp;    return quantityAfterTransaction;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Set the quantity left with the user after the transaction.
+&nbsp;   *
+&nbsp;   * @param quantityAfterTransaction quantity left with the user.
+&nbsp;   */
+&nbsp;  public void setQuantityAfterTransaction(Double quantityAfterTransaction) {
+<b class="fc">&nbsp;    this.quantityAfterTransaction = quantityAfterTransaction;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * returns the transaction type (buy/sell).
+&nbsp;   *
+&nbsp;   * @return the transaction type of the given transaction
+&nbsp;   */
+&nbsp;  public Util.TransactionType getTransactionType() {
+<b class="fc">&nbsp;    return transactionType;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * compares two transaction object.
+&nbsp;   *
+&nbsp;   * @param o the object to be compared.
+&nbsp;   *
+&nbsp;   * @return 0 if two transaction objects have same date 1 if current transaction&#39;s date is greater
+&nbsp;   *         than the incoming object -1 if current transaction&#39;s date is smaller than the incoming
+&nbsp;   *         object
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public int compareTo(StockTransaction o) {
+<b class="fc">&nbsp;    return this.transactionDate.compareTo(o.getTransactionDate());</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

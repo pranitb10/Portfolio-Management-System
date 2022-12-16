@@ -1,0 +1,260 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DataIOImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: DataIOImpl (main.java.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataIOImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/47)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ</td>
+  </tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ$auxiliary$bkD7hVJA</td>
+  </tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ$auxiliary$fwsrXplr</td>
+  </tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ$auxiliary$s7BGmmZ3</td>
+  </tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ$auxiliary$VIivfPp3</td>
+  </tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ$auxiliary$yMPWKcaf</td>
+  </tr>
+  <tr>
+    <td class="name">DataIOImpl$MockitoMock$YGuDUYdQ$auxiliary$YT5QcOTy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/47)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import com.google.gson.JsonArray;
+&nbsp;import com.google.gson.JsonElement;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileNotFoundException;
+&nbsp;import java.io.FileWriter;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.Reader;
+&nbsp;import java.nio.file.Files;
+&nbsp;import java.nio.file.Paths;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Scanner;
+&nbsp;
+&nbsp;import main.java.model.entities.Stock;
+&nbsp;import main.java.model.util.Util;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class represents an implementation of the DataIO Interface.
+&nbsp; * Majority of the methods deals with doing input/output of data from static Json/CSV files.
+&nbsp; */
+<b class="nc">&nbsp;public class DataIOImpl implements DataIO {</b>
+&nbsp;  private static final String PORTFOLIO_FILE_PATH = &quot;res/portfolio.json&quot;;
+&nbsp;  private static final String MASTER_STOCKS_FILE_PATH = &quot;res/NYSE_ALL_STOCKS.csv&quot;;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * reads persisted portfolios from the json file stored at the declared location.
+&nbsp;   *
+&nbsp;   * @return List of portfolio objects and their stocks.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public List&lt;Portfolio&gt; readPersistedPortfolios() {
+<b class="nc">&nbsp;    List&lt;FlexiblePortfolio&gt; flexiblePortfolios = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    List&lt;InFlexiblePortfolio&gt; inFlexiblePortfolios = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;
+&nbsp;    try {
+<b class="nc">&nbsp;      Reader reader = Files.newBufferedReader(Paths.get(&quot;res/portfolio.json&quot;));</b>
+<b class="nc">&nbsp;      JsonArray portfolioArray = Util.IN_GSON.fromJson(reader, JsonArray.class);</b>
+<b class="nc">&nbsp;      for (JsonElement p : portfolioArray) {</b>
+<b class="nc">&nbsp;        if (p.getAsJsonObject().get(&quot;portfolioType&quot;).getAsString().equals(&quot;inflexible&quot;)) {</b>
+<b class="nc">&nbsp;          inFlexiblePortfolios.add(Util.IN_GSON.fromJson(p, InFlexiblePortfolio.class));</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;          flexiblePortfolios.add(Util.IN_GSON.fromJson(p, FlexiblePortfolio.class));</b>
+&nbsp;        }
+<b class="nc">&nbsp;      }</b>
+<b class="nc">&nbsp;    } catch (Exception e) {</b>
+&nbsp;      // do nothing...this will just return empty list
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+<b class="nc">&nbsp;    List&lt;Portfolio&gt; finalList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    finalList.addAll(flexiblePortfolios);</b>
+<b class="nc">&nbsp;    finalList.addAll(inFlexiblePortfolios);</b>
+<b class="nc">&nbsp;    return finalList;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * reads stocks from the csv file stored at the declared location.
+&nbsp;   *
+&nbsp;   * @return List of stocks that are supported in the application.
+&nbsp;   */
+&nbsp;  public List&lt;Stock&gt; readMasterStockList() {
+<b class="nc">&nbsp;    List&lt;Stock&gt; masterList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    Scanner sc = null;</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      sc = new Scanner(new File(MASTER_STOCKS_FILE_PATH));</b>
+<b class="nc">&nbsp;    } catch (FileNotFoundException e) {</b>
+&nbsp;      //  If no file exists return an empty list
+<b class="nc">&nbsp;      return new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    while (sc.hasNext()) {</b>
+<b class="nc">&nbsp;      String rowText = sc.nextLine();</b>
+<b class="nc">&nbsp;      masterList.add(new Stock(rowText.split(Util.FILE_SEPARATOR)[1],</b>
+<b class="nc">&nbsp;                               rowText.split(Util.FILE_SEPARATOR)[0]));</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    sc.close();</b>
+<b class="nc">&nbsp;    return masterList;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method processes the CSV file given by the user and returns  the data to the model.
+&nbsp;   *
+&nbsp;   * @param portfolioType It&#39;s a string which allows the consequent method to get a portfolio
+&nbsp;   *                      type and determine the course of action.
+&nbsp;   * @return List of string each representing a row in the user provided file.
+&nbsp;   * @throws RuntimeException 1.If File not found in the given path.
+&nbsp;   *                          2.File is empty.
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public List&lt;String&gt; readUserGivenFile(String portfolioType) throws RuntimeException {
+<b class="nc">&nbsp;    String filePath = portfolioType.equalsIgnoreCase(&quot;flexible&quot;) ? &quot;res/user_flexible.csv&quot; :</b>
+<b class="nc">&nbsp;            &quot;res/user_inflexible.csv&quot;;</b>
+<b class="nc">&nbsp;    Scanner sc = null;</b>
+&nbsp;    try {
+<b class="nc">&nbsp;      sc = new Scanner(new File(filePath));</b>
+<b class="nc">&nbsp;    } catch (FileNotFoundException e) {</b>
+<b class="nc">&nbsp;      throw new RuntimeException(&quot;File not found at path&quot; + filePath);</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    if (!sc.hasNext()) {</b>
+<b class="nc">&nbsp;      throw new RuntimeException(&quot;File is empty&quot;);</b>
+&nbsp;    }
+&nbsp;    //ignore header
+<b class="nc">&nbsp;    sc.nextLine();</b>
+<b class="nc">&nbsp;    List&lt;String&gt; outputList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    while (sc.hasNext()) {</b>
+<b class="nc">&nbsp;      outputList.add(sc.nextLine());</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return outputList;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows the application to save the portfolio in a json file.
+&nbsp;   *
+&nbsp;   * @param portfolios The portfolio that needs be saved
+&nbsp;   * @throws IOException 1. The file-writer fails
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  public void savePortfolios(List&lt;Portfolio&gt; portfolios) throws IOException {
+<b class="nc">&nbsp;    FileWriter writer = new FileWriter(PORTFOLIO_FILE_PATH);</b>
+<b class="nc">&nbsp;    Util.OUT_GSON.toJson(portfolios, writer);</b>
+<b class="nc">&nbsp;    writer.flush();</b>
+<b class="nc">&nbsp;    writer.close();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

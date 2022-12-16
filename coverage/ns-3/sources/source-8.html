@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DataIO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">main.java.model</a>
+</div>
+
+<h1>Coverage Summary for Class: DataIO (main.java.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DataIO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package main.java.model;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import main.java.model.entities.Stock;
+&nbsp;
+&nbsp;/**
+&nbsp; * This interface provides all the data input and output functionality to the Model. It has
+&nbsp; * functions like readPersistedPortfolios, readPriceCache, savingPortfolio etc.
+&nbsp; */
+&nbsp;public interface DataIO {
+&nbsp;  /**
+&nbsp;   * This method reads all the portfolios that are persisted in the application.
+&nbsp;   *
+&nbsp;   * @return List of Portfolio objects that are persisted in the application.
+&nbsp;   */
+&nbsp;  List&lt;Portfolio&gt; readPersistedPortfolios();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method reads all the stocks that are supported by the application.
+&nbsp;   *
+&nbsp;   * @return List of Stock objects that were read from the master config file.
+&nbsp;   */
+&nbsp;  List&lt;Stock&gt; readMasterStockList();
+&nbsp;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method processes the file given by the user and returns it to the model.
+&nbsp;   *
+&nbsp;   * @param portfolioType It&#39;s a string which allows the consequent method to get a portfolio
+&nbsp;   *                      type and determine the course of action.
+&nbsp;   * @return List of string each representing a row in the user provided file.
+&nbsp;   * @throws RuntimeException 1.If File not found in the given path.
+&nbsp;   *                          2.File is empty.
+&nbsp;   */
+&nbsp;  List&lt;String&gt; readUserGivenFile(String portfolioType) throws RuntimeException;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * This method allows the to save the portfolio in a json file.
+&nbsp;   *
+&nbsp;   * @param portfolios The portfolio that needs be saved
+&nbsp;   * @throws IOException 1. The file writer fails
+&nbsp;   */
+&nbsp;  void savePortfolios(List&lt;Portfolio&gt; portfolios) throws IOException;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-27 17:21</div>
+</div>
+</body>
+</html>

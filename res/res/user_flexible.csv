@@ -1,0 +1,5 @@
+StockName|Quantity|TransactionDate|TransactionType
+ABBV|35|2022-04-12|b
+AAPL|100|2022-05-10|b
+AAPL|2000|2022-05-12|b
+AAPL|2000|2022-05-13|s
